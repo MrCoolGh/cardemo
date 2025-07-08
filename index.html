@@ -338,7 +338,7 @@
         /* Navbar Style */
         .liquid-glass {
             /* Light Mode Glass Effect */
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.15) !important;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px); /* For Safari */
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -346,7 +346,7 @@
         }
         body.dark .liquid-glass {
             /* Dark Mode Glass Effect */
-            background-color: rgba(30, 41, 59, 0.25);
+            background-color: rgba(30, 41, 59, 0.25) !important;
             border-bottom: 1px solid rgba(74, 85, 104, 0.3);
         }
 
@@ -361,9 +361,11 @@
         }
         body.dark #navbar-container .navbar-brand h1,
         body.dark #navbar-container .navbar-nav .nav-link,
-        body.dark #navbar-container .btn-dark-mode-toggle svg,
-        body.dark #navbar-container .navbar-toggler-icon {
+        body.dark #navbar-container .btn-dark-mode-toggle svg {
             color: #e2e8f0 !important; /* Always use light text in dark mode */
+        }
+        body.dark #navbar-container .navbar-toggler-icon {
+             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(226, 232, 240, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
         
 
@@ -436,7 +438,7 @@
 <!-- Navbar Start -->
 <div class="container-fluid sticky-top liquid-glass" id="navbar-container">
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-dark p-0">
+        <nav class="navbar navbar-expand-lg p-0">
             <a href="homepage.html" class="navbar-brand">
                 <h1>Matchars</h1>
             </a>
