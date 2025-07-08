@@ -335,32 +335,37 @@
             transform: rotate(180deg);
         }
 
-        /* Sticky Navbar Style */
-        .sticky-nav {
-            background-color: rgba(255, 255, 255, 0.15); /* Light glass effect */
+        /* Navbar Style */
+        .liquid-glass {
+            /* Light Mode Glass Effect */
+            background-color: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px); /* For Safari */
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            transition: background-color 0.3s ease-in-out;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .dark .sticky-nav {
-            background-color: rgba(30, 41, 59, 0.25); /* Dark glass effect */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* For Safari */
+        body.dark .liquid-glass {
+            /* Dark Mode Glass Effect */
+            background-color: rgba(30, 41, 59, 0.25);
             border-bottom: 1px solid rgba(74, 85, 104, 0.3);
         }
 
-        /* Light Mode Navbar Text Color */
-        body:not(.dark) .sticky-nav .navbar-brand h1,
-        body:not(.dark) .sticky-nav .navbar-nav .nav-link,
-        body:not(.dark) .sticky-nav .btn-dark-mode-toggle svg {
-            color: var(--text-light) !important;
+        /* Navbar Text & Icon Colors */
+        body:not(.dark) #navbar-container .navbar-brand h1,
+        body:not(.dark) #navbar-container .navbar-nav .nav-link,
+        body:not(.dark) #navbar-container .btn-dark-mode-toggle svg {
+            color: #212529 !important; /* Always use dark text in light mode */
         }
-
-        body:not(.dark) .sticky-nav .navbar-toggler-icon {
+        body:not(.dark) #navbar-container .navbar-toggler-icon {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(33, 37, 41, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
+        body.dark #navbar-container .navbar-brand h1,
+        body.dark #navbar-container .navbar-nav .nav-link,
+        body.dark #navbar-container .btn-dark-mode-toggle svg,
+        body.dark #navbar-container .navbar-toggler-icon {
+            color: #e2e8f0 !important; /* Always use light text in dark mode */
+        }
+        
 
         /* Avatar Dropdown Menu */
         .navbar .dropdown-menu {
@@ -429,11 +434,11 @@
 
 <body x-data="{ isDarkMode: localStorage.getItem('isDarkMode') === 'true' }" @dark-mode-toggle.window="isDarkMode = $event.detail" :class="isDarkMode ? 'dark' : ''" x-init="$watch('isDarkMode', val => localStorage.setItem('isDarkMode', val))">
 <!-- Navbar Start -->
-<div class="container-fluid sticky-top" id="navbar-container" style="transition: top 0.3s;">
+<div class="container-fluid sticky-top liquid-glass" id="navbar-container">
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-dark p-0">
             <a href="homepage.html" class="navbar-brand">
-                <h1 class="text-white">Matchars</h1>
+                <h1>Matchars</h1>
             </a>
             <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
                     data-bs-target="#navbarCollapse">
@@ -447,10 +452,10 @@
 
                     <!-- Dark Mode Toggle -->
                     <button @click="$dispatch('dark-mode-toggle', !isDarkMode)" class="btn btn-dark-mode-toggle nav-item" style="background: transparent; border: none; padding: 0.5rem 1rem;">
-                        <svg x-show="isDarkMode" class="text-white" style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 24 24">
+                        <svg x-show="isDarkMode" style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M11.75 3.412a.818.818 0 01-.07.917 6.332 6.332 0 00-1.4 3.971c0 3.564 2.98 6.494 6.706 6.494a6.86 6.86 0 002.856-.617.818.818 0 011.1 1.047C19.593 18.614 16.218 21 12.283 21 7.18 21 3 16.973 3 11.956c0-4.563 3.46-8.31 7.925-8.948a.818.818 0 01.826.404z"></path>
                         </svg>
-                        <svg x-show="!isDarkMode" class="text-white" style="width: 24px; height: 24px;" viewBox="0 0 20 20" fill="currentColor">
+                        <svg x-show="!isDarkMode" style="width: 24px; height: 24px;" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
                         </svg>
                     </button>
@@ -556,6 +561,7 @@
         </div>
     </main>
 
+    <!-- Modals are placed outside the main app container for better z-index handling -->
     <!-- Booking Modal -->
     <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -1190,20 +1196,26 @@
             ],
 
             init() {
-                this.bookingModalInstance = new bootstrap.Modal(document.getElementById('bookingModal'));
-                this.confirmationModalInstance = new bootstrap.Modal(document.getElementById('confirmationModal'));
-                this.resultModalInstance = new bootstrap.Modal(document.getElementById('resultModal'));
+                // Modals Initialization
+                const bookingModalEl = document.getElementById('bookingModal');
+                if (bookingModalEl) {
+                    this.bookingModalInstance = new bootstrap.Modal(bookingModalEl);
+                }
+                const confirmationModalEl = document.getElementById('confirmationModal');
+                if (confirmationModalEl) {
+                    this.confirmationModalInstance = new bootstrap.Modal(confirmationModalEl);
+                }
+                const resultModalEl = document.getElementById('resultModal');
+                if (resultModalEl) {
+                    this.resultModalInstance = new bootstrap.Modal(resultModalEl);
+                }
 
-                // Sticky Navbar Logic
+
+                // Hide/Show Navbar on Scroll
                 const navbar = document.getElementById('navbar-container');
                 let lastScrollTop = 0;
                 window.addEventListener('scroll', () => {
                     let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    if (scrollTop > 45) {
-                        navbar.classList.add('sticky-nav');
-                    } else {
-                        navbar.classList.remove('sticky-nav');
-                    }
                     if (scrollTop > lastScrollTop && scrollTop > navbar.offsetHeight){
                         // Scroll Down
                         navbar.style.top = `-${navbar.offsetHeight}px`;
