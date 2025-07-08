@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags  -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+    <title>StarCodeKh - CRM Analytics Dashboard</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <!-- CSS Assets -->
+    <link rel="stylesheet" href="css/app.css">
+
+    <!-- Javascript Assets -->
+    <script src="js/app.js" defer=""></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <script>
+        /**
+         * THIS SCRIPT REQUIRED FOR PREVENT FLICKERING IN SOME BROWSERS
+         */
+        localStorage.getItem("_x_darkMode_on") === "true" &&
+        document.documentElement.classList.add("dark");
+    </script>
+
+
+    <style>
+        .car-search-section {
+            background: var(--gradient, #f7f9fa);
+            padding: 48px 0 16px 0;
+            text-align: center;
+        }
+        .dark .car-search-section {
+            background: var(--dark-gradient, #0f172a);
+        }
+        .car-search-title {
+            font-size: 2.8rem;
+            font-family: 'Nunito', Arial, sans-serif;
+            color: #232946;
+            margin-bottom: 24px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        .dark .car-search-title {
+            color: #e2e8f0;
+        }
+        .car-search-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 500px; /* Reduced from 700px */
+            margin: 0 auto 40px auto;
+            background: #ebeff5;
+            border: 1px solid #fff;
+            box-shadow: 0 8px 24px rgba(60,72,94,0.08);
+            border-radius: 12px; /* Adjusted for a sleeker look */
+            padding: 0;
+        }
+        .dark .car-search-form {
+            background: #1e293b;
+            border-color: #334155;
+        }
+        .car-search-input {
+            flex: 1 1 0%;
+            padding: 12px 18px; /* Reduced from 18px 20px */
+            border: none;
+            border-radius: 12px 0 0 12px;
+            font-size: 1rem; /* Reduced from 1.1rem */
+            outline: none;
+            color: #232946;
+            background: transparent;
+            height: 48px; /* Added for consistent height */
+        }
+        .dark .car-search-input {
+            color: #e2e8f0;
+        }
+        .car-search-input::placeholder {
+            color: #676c7e;
+        }
+        .car-search-btn {
+            width: 120px; /* Reduced from 170px */
+            height: 48px; /* Reduced from 56px */
+            border: none;
+            border-radius: 0 12px 12px 0;
+            background: #3b82f6;
+            color: #fff;
+            font-size: 1rem; /* Reduced from 1.1rem */
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .featured-car-card {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .dark .featured-car-card {
+            background-color: #1e293b;
+            border-color: #334155;
+        }
+        .card-banner {
+            height: 180px;
+            border-radius: 12px;
+            margin: 1rem 1rem 0 1rem;
+            overflow: hidden;
+        }
+        .card-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 1rem 1.5rem 1.5rem 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .year {
+            background-color: #3b82f6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .card-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+        .card-list-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+        }
+        .card-list-item i {
+            font-size: 1.1rem;
+            color: #3b82f6;
+        }
+        .card-price-wrapper {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dark .card-price-wrapper {
+            border-top-color: #334155;
+        }
+        .card-price {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<body x-data="" class="is-header-blur" x-bind="$store.global.documentBody">
+<!-- App preloader-->
+<div class="app-preloader fixed z-50 grid h-full w-full place-content-center bg-slate-50 dark:bg-navy-900">
+    <div class="app-preloader-inner relative inline-block size-48"></div>
+</div>
+
+<!-- Page Wrapper -->
+<div id="root" class="min-h-100vh flex grow bg-slate-50 dark:bg-navy-900" x-cloak="">
+
+    <!-- Main Content Wrapper -->
+    <div class="main-content w-full">
+        <!-- App Header Wrapper-->
+        <nav class="header before:bg-white dark:before:bg-navy-750 print:hidden">
+            <!-- App Header  -->
+            <div class="header-container relative flex w-full bg-white dark:bg-navy-750 print:hidden py-1">
+                <!-- Header Items -->
+                <div class="flex w-full items-center justify-between">
+
+
+                    <!-- Right: Header buttons -->
+                    <div class="-mr-1.5 flex items-center space-x-2">
+
+                        <!-- Dark Mode Toggle -->
+                        <button @click="$store.global.isDarkModeEnabled = !$store.global.isDarkModeEnabled" class="btn size-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25">
+                            <svg x-show="$store.global.isDarkModeEnabled" x-transition:enter="transition-transform duration-200 ease-out absolute origin-top" x-transition:enter-start="scale-75" x-transition:enter-end="scale-100 static" class="size-6 text-amber-400" fill="currentColor" viewbox="0 0 24 24">
+                                <path d="M11.75 3.412a.818.818 0 01-.07.917 6.332 6.332 0 00-1.4 3.971c0 3.564 2.98 6.494 6.706 6.494a6.86 6.86 0 002.856-.617.818.818 0 011.1 1.047C19.593 18.614 16.218 21 12.283 21 7.18 21 3 16.973 3 11.956c0-4.563 3.46-8.31 7.925-8.948a.818.818 0 01.826.404z"></path>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" x-show="!$store.global.isDarkModeEnabled" x-transition:enter="transition-transform duration-200 ease-out absolute origin-top" x-transition:enter-start="scale-75" x-transition:enter-end="scale-100 static" class="size-6 text-amber-400" viewbox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Monochrome Mode Toggle -->
+                        <button @click="$store.global.isMonochromeModeEnabled = !$store.global.isMonochromeModeEnabled" class="btn size-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25">
+                            <i class="fa-solid fa-palette bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-lg font-semibold text-transparent"></i>
+                        </button>
+
+                        <!-- Right Sidebar home page icon -->
+                        <button
+                                @click="window.location.href = 'homepage.html'; $store.global.isRightSidebarExpanded = true"
+                                class="btn size-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5.5 text-slate-500 dark:text-navy-100" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                            </svg>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+        <main class="w-full pb-8">
+            <div x-data="{
+          showBookingModal: false,
+          showConfirmationModal: false,
+          showSuccessModal: false,
+          showErrorModal: false,
+          modalTitle: '',
+          modalText: '',
+          errorTitle: '',
+          errorMessage: '',
+          gridColumns: 'lg:grid-cols-3',
+          cars: [
+            { id:1, name:'Toyota RAV4', type: 'suv', price:440, year: 2021, transmission:'Automatic', fuel:'Hybrid', seats:4, mileage:'6.1km / 1-litre',
+              description:'A reliable and fuel-efficient SUV, perfect for city driving and long trips. It comes equipped with modern safety features, a comfortable interior, and a smooth ride.',
+              image:'images/car-1.jpg',
+              gallery:['images/car-1.jpg', 'images/car-2.jpg', 'images/car-3.jpg', 'images/car-4.jpg', 'images/car-5.jpg']
+            },
+            { id:2, name:'BMW 3 Series', type: 'sedan', price:350, year: 2019, transmission:'Automatic', fuel:'Gasoline', seats:4, mileage:'8.2km / 1-litre',
+              description:'A stylish and sporty sedan with great handling and modern features. This car offers an engaging driving experience, a high-quality cabin with premium materials, and advanced driver-assist technologies.',
+              image:'images/car-2.jpg',
+              gallery:['images/car-2.jpg', 'images/car-3.jpg', 'images/car-4.jpg', 'images/car-5.jpg', 'images/car-6.jpg']
+            },
+            { id:3, name:'Volkswagen T-Cross', type: 'suv', price:400, year: 2020, transmission:'Automatic', fuel:'Gasoline', seats:4, mileage:'5.3km / 1-litre',
+              description:'A compact car that is fun to drive and offers a comfortable ride. Known for its agile handling and responsive steering, the Focus is perfect for navigating tight city streets.',
+              image:'images/car-3.jpg',
+              gallery:['images/car-3.jpg', 'images/car-4.jpg', 'images/car-5.jpg', 'images/car-6.jpg', 'images/car-1.jpg']
+            },
+            { id:4, name:'Cadillac Escalade', type: 'suv', price:620, year: 2020, transmission:'Automatic', fuel:'Gasoline', seats:4, mileage:'7.7km / 1-litre',
+              description:'Experience luxury and performance with this premium SUV. The Escalade features a powerful engine, an exquisitely crafted interior with ambient lighting, and state-of-the-art technology.',
+              image:'images/car-4.jpg',
+              gallery:['images/car-4.jpg', 'images/car-5.jpg', 'images/car-6.jpg', 'images/car-1.jpg', 'images/car-2.jpg']
+            }
+          ],
+          selectedCar: null,
+          bookingDetails: {},
+          contactForm: {
+              name: '',
+              email: '',
+              subject: '',
+              phone: '',
+              message: ''
+          },
+
+          searchTerm: '',
+          fuelTypeFilter: '',
+          priceRangeFilter: '',
+          transmissionFilter: '',
+
+          init() {
+            this.updateGridColumns();
+            window.addEventListener('resize', () => this.updateGridColumns());
+          },
+
+          updateGridColumns() {
+            const zoomLevel = window.devicePixelRatio;
+            if (zoomLevel <= 0.8) {
+                this.gridColumns = 'lg:grid-cols-4';
+            } else {
+                this.gridColumns = 'lg:grid-cols-3';
+            }
+          },
+
+          get computedPickupDateTime() {
+            return this.bookingDetails.pickupDate && this.bookingDetails.pickupTime ? `${this.bookingDetails.pickupDate}T${this.bookingDetails.pickupTime}` : '';
+          },
+          get computedDropoffDateTime() {
+            return this.bookingDetails.dropoffDate && this.bookingDetails.dropoffTime ? `${this.bookingDetails.dropoffDate}T${this.bookingDetails.dropoffTime}` : '';
+          },
+
+          totalDays() {
+              if (!this.computedPickupDateTime || !this.computedDropoffDateTime) return 0;
+              const start = new Date(this.computedPickupDateTime);
+              const end = new Date(this.computedDropoffDateTime);
+              if (end <= start) return 0;
+              const diffTime = Math.abs(end - start);
+              return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          },
+
+          totalAmount() {
+              const days = this.totalDays();
+              if (!this.selectedCar || days <= 0) return '0.00';
+              return (days * this.selectedCar.price).toFixed(2);
+          },
+
+          formatDateTime(dateTimeString) {
+            if (!dateTimeString) return 'N/A';
+            const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            return new Date(dateTimeString).toLocaleDateString(undefined, options);
+          },
+
+          get filteredCars() {
+            return this.cars.filter(car => {
+              const searchMatch = car.name.toLowerCase().includes(this.searchTerm.toLowerCase()) || car.description.toLowerCase().includes(this.searchTerm.toLowerCase());
+              const fuelTypeMatch = this.fuelTypeFilter ? car.fuel.toLowerCase() === this.fuelTypeFilter : true;
+              const transmissionMatch = this.transmissionFilter ? car.transmission.toLowerCase() === this.transmissionFilter : true;
+              const priceMatch = this.priceRangeFilter ? this.checkPrice(car.price, this.priceRangeFilter) : true;
+              return searchMatch && fuelTypeMatch && transmissionMatch && priceMatch;
+            });
+          },
+
+          checkPrice(price, range) {
+            switch(range) {
+                case '0-200': return price < 200;
+                case '200-400': return price >= 200 && price < 400;
+                case '400-600': return price >= 400 && price < 600;
+                case '600+': return price >= 600;
+                default: return true;
+            }
+          },
+
+          openBookingModal(car) {
+            this.selectedCar = car;
+            this.resetBookingForm();
+            this.showBookingModal = true;
+          },
+
+          resetBookingForm() {
+            this.bookingDetails = {
+                name: 'MrCoolGh',
+                email: 'cool@email.com',
+                pickupLocation: 'office',
+                customPickupLocation: '',
+                dropoffLocation: 'office',
+                customDropoffLocation: '',
+                pickupDate: '',
+                pickupTime: '',
+                dropoffDate: '',
+                dropoffTime: '',
+                note: ''
+            };
+          },
+
+          proceedToConfirmation() {
+            if (!this.bookingDetails.pickupDate || !this.bookingDetails.pickupTime) {
+                this.handleError('Validation Error', 'Please select a pickup date and time.');
+                return;
+            }
+            if (!this.bookingDetails.dropoffDate || !this.bookingDetails.dropoffTime) {
+                this.handleError('Validation Error', 'Please select a drop-off date and time.');
+                return;
+            }
+            if (new Date(this.computedDropoffDateTime) <= new Date(this.computedPickupDateTime)) {
+                this.handleError('Validation Error', 'Drop-off date must be after the pickup date.');
+                return;
+            }
+            if (this.bookingDetails.pickupLocation === 'other' && !this.bookingDetails.customPickupLocation.trim()) {
+                this.handleError('Validation Error', 'Please enter the custom pickup location.');
+                return;
+            }
+            if (this.bookingDetails.dropoffLocation === 'other' && !this.bookingDetails.customDropoffLocation.trim()) {
+                this.handleError('Validation Error', 'Please enter the custom drop-off location.');
+                return;
+            }
+
+            this.showBookingModal = false;
+            this.showConfirmationModal = true;
+          },
+
+          finalizeBooking() {
+            this.showConfirmationModal = false;
+            this.modalTitle = 'Booking Successful!';
+            this.modalText = `You have successfully booked the ${this.selectedCar.name}. A confirmation has been sent to your email.`;
+            this.showSuccessModal = true;
+          },
+
+          handleError(title, message) {
+            this.errorTitle = title;
+            this.errorMessage = message;
+            this.showErrorModal = true;
+          },
+
+          submitContactForm() {
+              const { name, email, subject, phone, message } = this.contactForm;
+              if (!name || !email || !subject || !phone || !message) {
+                  this.handleError('Form Error', 'Please fill out all fields in the contact form.');
+                  return;
+              }
+              // Reset form
+              this.contactForm = { name: '', email: '', subject: '', phone: '', message: '' };
+              // Show success message
+              this.modalTitle = 'Message Sent!';
+              this.modalText = 'Thank you for contacting us. We will get back to you shortly.';
+              this.showSuccessModal = true;
+          }
+        }"
+                 x-effect="document.body.classList.toggle('overflow-hidden', showBookingModal || showConfirmationModal || showSuccessModal || showErrorModal)"
+            >
+
+                <!-- Search and Filter Section -->
+                <section class="car-search-section">
+                    <div class="container mx-auto px-4">
+                        <h1 class="car-search-title">Available Cars</h1>
+
+                        <!-- Search Bar -->
+                        <div class="car-search-form">
+                            <input type="text" x-model.debounce.300ms="searchTerm" class="car-search-input" placeholder="Search for cars by name or feature...">
+                            <button type="button" class="car-search-btn">Search</button>
+                        </div>
+
+
+                    </div>
+                </section>
+
+                <!-- Cars Grid -->
+                <div class="p-4 sm:p-5 lg:p-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6" :class="gridColumns">
+                        <template x-for="car in filteredCars" :key="car.id">
+                            <div class="featured-car-card">
+                                <figure class="card-banner">
+                                    <img :src="car.image" :alt="car.name" loading="lazy">
+                                </figure>
+                                <!-- Gallery -->
+                                <div class="p-2 flex flex-wrap gap-2 justify-center bg-slate-50 dark:bg-navy-800">
+                                    <template x-for="img in car.gallery" :key="img">
+                                        <img @click="car.image = img"
+                                             :class="car.image === img ? 'ring-2 ring-primary dark:ring-accent' : 'opacity-70 hover:opacity-100'"
+                                             :src="img" class="h-12 w-12 object-cover rounded-lg cursor-pointer transition-all"/>
+                                    </template>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-title-wrapper">
+                                        <h3 class="h3 card-title" x-text="car.name"></h3>
+                                        <data class="year" :value="car.year" x-text="car.year"></data>
+                                    </div>
+                                    <ul class="card-list">
+                                        <li class="card-list-item"><i class="fas fa-users"></i><span x-text="car.seats + ' People'"></span></li>
+                                        <li class="card-list-item"><i class="fas fa-gas-pump text-info"></i><span x-text="car.fuel"></span></li>
+                                        <li class="card-list-item"><i class="fas fa-tachometer-alt text-warning"></i><span x-text="car.mileage"></span></li>
+                                        <li class="card-list-item"><i class="fas fa-car-side text-primary"></i><span x-text="car.transmission"></span></li>
+                                    </ul>
+
+                                    <!-- Collapsible Description -->
+                                    <div x-data="{expanded:false}" class="mt-4">
+                                        <div class="overflow-hidden rounded-lg border border-slate-150 dark:border-navy-500">
+                                            <div @click="expanded = !expanded" class="flex items-center justify-between bg-slate-100 px-3 py-2 dark:bg-navy-500 cursor-pointer">
+                                                <p class="text-slate-700 font-medium dark:text-navy-100">
+                                                    Description
+                                                </p>
+                                                <button class="btn -mr-1.5 size-7 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25">
+                                                    <i :class="expanded && '-rotate-180'" class="fas fa-chevron-down text-sm transition-transform"></i>
+                                                </button>
+                                            </div>
+                                            <div x-show="expanded" x-collapse>
+                                                <div class="px-3 py-4">
+                                                    <p class="text-sm text-slate-600 dark:text-navy-300" x-text="car.description"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-price-wrapper">
+                                        <p class="card-price"><strong x-text="`GH₵ ${car.price}`"></strong> / day</p>
+                                        <button @click="openBookingModal(car)" class="btn bg-primary text-white">Rent now</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Booking Modal -->
+                <template x-teleport="#x-teleport-target">
+                    <div class="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6"
+                         x-show="showBookingModal" role="dialog" @keydown.window.escape="showBookingModal=false">
+                        <div class="absolute inset-0 bg-slate-900/60" @click="showBookingModal=false"></div>
+                        <div class="relative flex w-full max-w-lg flex-col bg-white rounded-lg shadow-lg dark:bg-navy-700" style="max-height: 90vh;">
+                            <!-- header -->
+                            <div class="flex items-center justify-between bg-slate-200 px-4 py-3 rounded-t-lg dark:bg-navy-800">
+                                <h3 class="font-medium text-slate-700 dark:text-navy-100" x-text="`Book ${selectedCar ? selectedCar.name : ''}`"></h3>
+                                <button @click="showBookingModal=false" class="text-slate-500 hover:text-slate-700 dark:hover:text-navy-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <!-- body -->
+                            <div class="px-4 py-4 sm:px-5 overflow-y-auto">
+                                <div class="flex flex-col items-center">
+                                    <img :src="selectedCar ? selectedCar.image : ''" class="w-full h-48 object-cover rounded-lg mb-4">
+                                </div>
+                                <div class="mt-4 space-y-4">
+                                    <!-- Pickup and Dropoff -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <label class="block"><span>Pickup Location:</span>
+                                            <select x-model="bookingDetails.pickupLocation" class="form-select mt-1 w-full rounded-lg border px-3 py-2">
+                                                <option value="office">Our Office</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </label>
+                                        <label class="block"><span>Drop-off Location:</span>
+                                            <select x-model="bookingDetails.dropoffLocation" class="form-select mt-1 w-full rounded-lg border px-3 py-2">
+                                                <option value="office">Our Office</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div x-show="bookingDetails.pickupLocation === 'other'" x-collapse>
+                                        <label class="block"><span>Custom Pickup Location:</span>
+                                            <textarea x-model="bookingDetails.customPickupLocation" rows="2" class="form-textarea mt-1 w-full rounded-lg border p-2" placeholder="Enter full address"></textarea>
+                                        </label>
+                                    </div>
+                                    <div x-show="bookingDetails.dropoffLocation === 'other'" x-collapse>
+                                        <label class="block"><span>Custom Drop-off Location:</span>
+                                            <textarea x-model="bookingDetails.customDropoffLocation" rows="2" class="form-textarea mt-1 w-full rounded-lg border p-2" placeholder="Enter full address"></textarea>
+                                        </label>
+                                    </div>
+
+                                    <!-- Date and Time -->
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block mb-1"><span>Pickup Date & Time:</span></label>
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div class="relative">
+                                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                        <i class="fas fa-calendar-alt text-slate-400"></i>
+                                                    </div>
+                                                    <input x-model="bookingDetails.pickupDate" class="form-input pl-10 w-full rounded-lg border px-3 py-2" type="date"/>
+                                                </div>
+                                                <input x-model="bookingDetails.pickupTime" class="form-input w-full rounded-lg border px-3 py-2" type="time"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-1"><span>Drop-off Date & Time:</span></label>
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div class="relative">
+                                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                        <i class="fas fa-calendar-alt text-slate-400"></i>
+                                                    </div>
+                                                    <input x-model="bookingDetails.dropoffDate" class="form-input pl-10 w-full rounded-lg border px-3 py-2" type="date"/>
+                                                </div>
+                                                <input x-model="bookingDetails.dropoffTime" class="form-input w-full rounded-lg border px-3 py-2" type="time"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Note -->
+                                    <label class="block"><span>Note (optional):</span>
+                                        <textarea x-model="bookingDetails.note" rows="3" class="form-textarea mt-1 w-full rounded-lg border p-2" placeholder="Any special requests?"></textarea>
+                                    </label>
+
+                                    <!-- Calculation -->
+                                    <div class="mt-4 space-y-2 rounded-lg border border-slate-200 dark:border-navy-500 p-3">
+                                        <div class="flex justify-between text-lg">
+                                            <span class="font-medium text-slate-600 dark:text-navy-100">Total Days:</span>
+                                            <span class="font-bold text-primary dark:text-accent-light" x-text="totalDays()"></span>
+                                        </div>
+                                        <div class="flex justify-between text-xl font-bold">
+                                            <span class="text-slate-600 dark:text-navy-100">Total Amount:</span>
+                                            <span class="text-primary dark:text-accent-light" x-text="`GH₵ ${totalAmount()}`"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- footer -->
+                            <div class="flex justify-end space-x-2 bg-slate-200 px-4 py-3 rounded-b-lg dark:bg-navy-800">
+                                <button @click="showBookingModal=false" class="btn bg-warning/10 font-medium text-warning hover:bg-warning/20 focus:bg-warning/20 active:bg-warning/25">Cancel</button>
+                                <button @click="proceedToConfirmation()" class="btn bg-info/10 font-medium text-info hover:bg-info/20 focus:bg-info/20 active:bg-info/25">Review Booking</button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Confirmation Modal -->
+                <template x-teleport="#x-teleport-target">
+                    <div class="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6"
+                         x-show="showConfirmationModal" role="dialog" @keydown.window.escape="showConfirmationModal = false; showBookingModal = true;">
+                        <div class="absolute inset-0 bg-slate-900/60" @click="showConfirmationModal = false; showBookingModal = true;"></div>
+                        <div class="relative flex w-full max-w-md flex-col bg-white rounded-lg shadow-lg dark:bg-navy-700" style="max-height: 90vh;">
+                            <div class="flex items-center justify-between bg-slate-200 px-4 py-3 rounded-t-lg dark:bg-navy-800">
+                                <h3 class="font-medium text-slate-700 dark:text-navy-100">Confirm Your Booking</h3>
+                                <button @click="showConfirmationModal = false; showBookingModal = true;" class="text-slate-500 hover:text-slate-700 dark:hover:text-navy-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                            </div>
+                            <div class="p-4 sm:p-5 space-y-4 overflow-y-auto">
+                                <div class="flex items-center gap-4">
+                                    <img :src="selectedCar ? selectedCar.image : ''" class="w-32 h-20 object-cover rounded-lg">
+                                    <div class="flex-1">
+                                        <h4 class="text-xl font-bold text-slate-800 dark:text-navy-50" x-text="selectedCar ? selectedCar.name : ''"></h4>
+                                        <p class="text-sm text-slate-600 dark:text-navy-300" x-text="selectedCar ? `${selectedCar.year} - ${selectedCar.transmission}` : ''"></p>
+                                    </div>
+                                </div>
+                                <div class="space-y-3 rounded-lg border border-slate-200 dark:border-navy-500 p-3">
+                                    <div class="grid grid-cols-1 gap-y-2 text-sm">
+                                        <div>
+                                            <p class="font-semibold">Pickup:</p>
+                                            <p class="text-slate-600 dark:text-navy-200" x-text="formatDateTime(computedPickupDateTime)"></p>
+                                            <p class="text-xs text-slate-500" x-text="bookingDetails.pickupLocation === 'office' ? 'Our Office' : bookingDetails.customPickupLocation"></p>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold">Drop-off:</p>
+                                            <p class="text-slate-600 dark:text-navy-200" x-text="formatDateTime(computedDropoffDateTime)"></p>
+                                            <p class="text-xs text-slate-500" x-text="bookingDetails.dropoffLocation === 'office' ? 'Our Office' : bookingDetails.customDropoffLocation"></p>
+                                        </div>
+                                    </div>
+                                    <div x-show="bookingDetails.note.trim()" x-collapse>
+                                        <p class="font-semibold mt-2">Your Note:</p>
+                                        <p class="text-xs text-slate-500 italic break-words" x-text="bookingDetails.note"></p>
+                                    </div>
+                                </div>
+                                <div class="mt-2 space-y-2 rounded-lg border border-slate-200 dark:border-navy-500 p-3 bg-slate-50 dark:bg-navy-600">
+                                    <div class="flex justify-between text-base">
+                                        <span class="font-medium text-slate-600 dark:text-navy-100">Total Days:</span>
+                                        <span class="font-bold text-primary dark:text-accent-light" x-text="totalDays()"></span>
+                                    </div>
+                                    <div class="flex justify-between text-lg font-bold">
+                                        <span class="text-slate-600 dark:text-navy-100">Total Amount:</span>
+                                        <span class="text-primary dark:text-accent-light" x-text="`GH₵ ${totalAmount()}`"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-end space-x-2 bg-slate-200 px-4 py-3 rounded-b-lg dark:bg-navy-800">
+                                <button @click="showConfirmationModal = false; showBookingModal = true;" class="btn bg-warning/10 font-medium text-warning hover:bg-warning/20 focus:bg-warning/20 active:bg-warning/25">Edit</button>
+                                <button @click="finalizeBooking()" class="btn bg-success font-medium text-white hover:bg-success-focus focus:bg-success-focus active:bg-success-focus/90">Confirm & Book</button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+
+                <!-- Success Modal -->
+                <template x-teleport="#x-teleport-target">
+                    <div class="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5" x-show="showSuccessModal" role="dialog" @keydown.window.escape="showSuccessModal = false">
+                        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur transition-opacity duration-300" @click="showSuccessModal = false" x-show="showSuccessModal" x-transition:enter="ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
+                        <div class="relative max-w-lg rounded-lg bg-white px-4 py-10 text-center transition-opacity duration-300 dark:bg-navy-700 sm:px-5" x-show="showSuccessModal" x-transition:enter="ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="inline size-28 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div class="mt-4">
+                                <h2 class="text-2xl text-slate-700 dark:text-navy-100" x-text="modalTitle"></h2>
+                                <p class="mt-2" x-text="modalText"></p>
+                                <button @click="showSuccessModal = false" class="btn mt-6 bg-success font-medium text-white hover:bg-success-focus focus:bg-success-focus active:bg-success-focus/90">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Error Modal -->
+                <template x-teleport="#x-teleport-target">
+                    <div class="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5" x-show="showErrorModal" role="dialog" @keydown.window.escape="showErrorModal = false">
+                        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur transition-opacity duration-300" @click="showErrorModal = false" x-show="showErrorModal" x-transition:enter="ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
+                        <div class="relative max-w-lg rounded-lg bg-white px-4 py-10 text-center transition-opacity duration-300 dark:bg-navy-700 sm:px-5" x-show="showErrorModal" x-transition:enter="ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="inline size-28 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div class="mt-4">
+                                <h2 class="text-2xl font-medium text-slate-700 dark:text-navy-100" x-text="errorTitle"></h2>
+                                <p class="mt-2" x-text="errorMessage"></p>
+                                <button @click="showErrorModal = false" class="btn mt-6 bg-error font-medium text-white hover:bg-error-focus focus:bg-error-focus active:bg-error-focus/90">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+
+
+<!--
+    This is a place for Alpine.js Teleport feature
+    @see https://alpinejs.dev/directives/teleport
+  -->
+<div id="x-teleport-target"></div>
+<script>
+    window.addEventListener("DOMContentLoaded", () => Alpine.start());
+</script>
+
+</body>
+</html>
